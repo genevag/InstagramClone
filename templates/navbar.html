@@ -1,0 +1,18 @@
+<nav class="navbar navbar-dark bg-inverse">
+  <div class="nav navbar-nav">
+    <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      &#9776;
+    </button>
+
+    <div class="collapse navbar-toggleable-xs" id="collapsibleNavbar">
+      <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="#">Features</a>
+      <a class="nav-item nav-link" href="#">Pricing</a>
+      <a class="nav-item nav-link" href="#">About</a>
+    </div>
+
+
+  <a href="{% url 'logout' %}"><button class="btn btn-success-outline pull-xs-right" type="submit"><i class="fa fa-sign-out" aria-hidden="true"></i></button></a>
+
+  </div>
+</nav>
