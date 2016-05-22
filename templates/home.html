@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1> Welcome! </h1>
+
+<div style="margin: auto; max-width: 35em;">
+{% for post in posts reversed %}
+<div class="card" id="{{ post.id }}">
+  <div class="card-block">
+    <a href="#">{{ post.user.user.username }}</a>
+    <small class="text-muted pull-right">{{ post.date_created | timesince }}</small>
+  </div>
+
+  <img class="card-img-top" data-src="..." alt="Card image cap" src="{{ post.image }}" width=100%>
+
+  <div class="card-block">
+    <p class="card-text"> <span class="bold" style="font-weight: 500;">{{ post.likes }} likes</span> </p>
+    <p class="card-text">{{ post.caption }}</p>
+  </div>
+
+  <div class="card-block">
+    <div class="form-group row">
+      <a href="#"><i class="fa fa-heart-o col-sm-1" aria-hidden="true" style="font-size: 1.5em; padding-top: 5px;"></i></a>
+      <div class="col-sm-11">
+        <input type="text" class="form-control" placeholder="Add a comment" style="border: transparent;">
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

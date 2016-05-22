@@ -29,6 +29,13 @@ class PostList(generics.GenericAPIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def delete(self, request, format=None):
+        posts = Post.objects.all()
+        for post in posts:
+            post.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 class PostDetail(generics.GenericAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
@@ -53,3 +60,47 @@ class PostDetail(generics.GenericAPIView):
 
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# def getImage(request):
+#     return Response(200)
+
+class PostLikes(generics.GenericAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+    def get(self, request, pk, format=None):
+        try:
+            post = Post.objects.get(pk=pk)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        likes = post.getLikes()
+        return Response({'likes': likes}, status=status.HTTP_200_OK)
+
+    def post(self, request, pk, format=None):
+        try:
+            post = Post.objects.get(pk=pk)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        userprofile = UserProfile.objects.get(user=request.user)
+
+        post.like(userprofile)
+        post.save()
+        
+        serializer = PostSerializer(post)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # def delete(self, request, pk, format=None):
+    #     try:
+    #         post = Post.objects.get(pk=pk)
+    #     except:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
+    #
+    #     if request.user != post.user.user:
+    #         return Response(status=status.HTTP_403_FORBIDDEN)
+    #
+    #     post.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)

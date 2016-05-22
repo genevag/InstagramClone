@@ -15,6 +15,7 @@ import dj_database_url
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LOGIN_REDIRECT_URL = '/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -37,6 +38,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'api',
     'stream',
+    'management',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -75,17 +77,17 @@ WSGI_APPLICATION = 'InstagramClone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://ouojucpaysfzdn:D99gHsSUyVG6GFtVTzmGaQrVEW@ec2-107-22-248-209.compute-1.amazonaws.com:5432/dp73t5fm0m6lq'
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
+
+# os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://eocwxwnpyvyprc:qFFj-MOdv4lRZCItbVeSoengjD@ec2-23-21-235-126.compute-1.amazonaws.com:5432/d1t4t4sr2q12en'
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
+# }
 
 
 AUTH_PROFILE_MODULE = "api.UserProfile"
@@ -107,10 +109,10 @@ USE_L10N = True
 USE_TZ = True
 
 
-os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://verixkcynrivtb:5iTUEbZ9crGKqQ4hGjhNBMpMgN@ec2-54-235-254-199.compute-1.amazonaws.com:5432/d1inkcp2o18qth'
+# os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://verixkcynrivtb:5iTUEbZ9crGKqQ4hGjhNBMpMgN@ec2-54-235-254-199.compute-1.amazonaws.com:5432/d1inkcp2o18qth'
 
 # # Parse database configuration from $DATABASE_URL
-DATABASES['default'] = dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
+# DATABASES['default'] = dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
 
 #
 # # Enable Connection Pooling (if desired)
@@ -138,3 +140,4 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 MEDIA_ROOT = 'media'
+MEDIA_URL = '/'

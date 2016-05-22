@@ -12,6 +12,10 @@ class Tag(models.Model):
     name  = models.CharField(max_length=50)
     posts = models.ManyToManyField('Post', related_name="tags")
 
+class Like(models.Model):
+    user = models.ForeignKey('UserProfile', related_name="likes")
+    post = models.ForeignKey('Post')
+
 class Post(models.Model):
     image = models.ImageField(upload_to=settings.MEDIA_ROOT)
     caption = models.TextField(max_length=2200)
@@ -20,6 +24,20 @@ class Post(models.Model):
     user = models.ForeignKey('UserProfile')
     date_created = models.DateTimeField(auto_now_add=True)
     #comments
+
+    def getLikes(self):
+        return self.likes
+
+    def like(self, userprofile):
+        print vars(self)
+        likeRelationship = Like(user=userprofile, post=self)
+        likeRelationship.save()
+        print vars(likeRelationship)
+        likeRelationship.save()
+        self.likes = self.likes + 1
+        print "LIKED"
+
+
 
 class Comment(models.Model):
     post = models.ForeignKey('Post', related_name='comments')

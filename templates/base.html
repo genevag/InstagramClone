@@ -36,5 +36,66 @@
   <button type="button" class="btn btn-warning-outline">Warning</button>
   <button type="button" class="btn btn-danger-outline">Danger</button>
 
+  <div class="container">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+
+
+  <script>
+  window.onload = function() {
+    $('#uploadImageForm').submit(function(event) {
+      // alert("HELLO");
+      event.preventDefault();
+      var formData = new FormData($("#uploadImageForm")[0]);
+      $.ajax({
+        url: 'http://' + window.location.host + '/api/posts/',
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+          alert("YES");
+          console.log(response);
+        },
+        error: function(xhr, ajaxOptions, error) {
+          alert("NO");
+          console.log(xhr);
+        },
+        complete: function(response) {
+          window.location.href = '/';
+        }
+      });
+    });
+  };
+  </script>
+
+  <div class="modal fade" id="uploadImageModal" tabindex="-1" role="dialog" aria-labelledby="uploadImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="uploadImageForm" method='post' enctype="multipart/form-data"> {% csrf_token %}
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel"> Post a New Photo </h4>
+          </div>
+          <div class="modal-body">
+              <input type="file" name="image" accept="image/*" class="form-control-file"/>
+              <br/>
+              <textarea class="form-control" name="caption"></textarea>
+              <div class="preview">
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Post</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>

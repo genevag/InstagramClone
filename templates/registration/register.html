@@ -1,0 +1,10 @@
+<h1> Registration </h1>
+
+<form method="POST" action="{% url 'register' %}" enctype="multipart/form-data"> {% csrf_token %}
+{{ form.as_p }}
+  <button type="submit" class="btn btn-primary-outline"> Register </button>
+</form>
+
+
+{{ form.errors }}
+{{ form.non_field_errors }}
