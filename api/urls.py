@@ -23,4 +23,5 @@ urlpatterns = [
     # url(r'^users/$', views.UserList.as_view(), name='users')
     # url(r'^auth/',include('rest_framework.urls'))
     # url(r'^images/$', views.getImage, name='images')
+
 ]

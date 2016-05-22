@@ -84,10 +84,11 @@ DATABASES = {
     }
 }
 
-# os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://eocwxwnpyvyprc:qFFj-MOdv4lRZCItbVeSoengjD@ec2-23-21-235-126.compute-1.amazonaws.com:5432/d1t4t4sr2q12en'
-# DATABASES = {
-#     'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
-# }
+
+os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://eocwxwnpyvyprc:qFFj-MOdv4lRZCItbVeSoengjD@ec2-23-21-235-126.compute-1.amazonaws.com:5432/d1t4t4sr2q12en'
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
+}
 
 
 AUTH_PROFILE_MODULE = "api.UserProfile"
@@ -109,10 +110,12 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # os.environ["HEROKU_POSTGRESQL_ONYX_URL"] = 'postgres://verixkcynrivtb:5iTUEbZ9crGKqQ4hGjhNBMpMgN@ec2-54-235-254-199.compute-1.amazonaws.com:5432/d1inkcp2o18qth'
 
 # # Parse database configuration from $DATABASE_URL
 # DATABASES['default'] = dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
+
 
 #
 # # Enable Connection Pooling (if desired)
@@ -138,6 +141,7 @@ STATICFILES_DIRS = (
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
 
 MEDIA_ROOT = 'media'
 MEDIA_URL = '/'

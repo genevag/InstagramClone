@@ -88,7 +88,7 @@ class PostLikes(generics.GenericAPIView):
 
         post.like(userprofile)
         post.save()
-        
+
         serializer = PostSerializer(post)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
