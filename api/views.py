@@ -81,26 +81,68 @@ class PostLikes(generics.GenericAPIView):
     def post(self, request, pk, format=None):
         try:
             post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        userprofile = UserProfile.objects.get(user=request.user)
+
+        try:
+            post.like(userprofile)
+            post.save()
+        except Exception as e:
+            return Response({"message": e.message}, status=status.HTTP_409_CONFLICT)
+
+        serializer = PostSerializer(post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk, format=None):
+        try:
+            post = Post.objects.get(pk=pk)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         userprofile = UserProfile.objects.get(user=request.user)
 
-        post.like(userprofile)
-        post.save()
+        try:
+            post.unlike(userprofile)
+            post.save()
+        except Exception as e:
+            return Response({"message": e.message}, status=status.HTTP_409_CONFLICT)
 
         serializer = PostSerializer(post)
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # def delete(self, request, pk, format=None):
-    #     try:
-    #         post = Post.objects.get(pk=pk)
-    #     except:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
+
+class PostComments(generics.GenericAPIView):
+
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+
+    def get(self, request, post_pk, format=None):
+        post = Post.objects.get(pk=post_pk)
+        comments = post.comments.order_by('-date_created')
+        print comments
+        #
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, post_pk, format=None):
+        try:
+            post = Post.objects.get(pk=post_pk)
+        except Post.DoesNotExist:
+            return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        userprofile = UserProfile.objects.get(user=request.user)
+
+        comment = Comment.objects.create(text=request.POST.get('text'), post=post, user=userprofile)
+        comment.save()
+        serializer = CommentSerializer(comment)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # def delete(self, request, format=None):
+    #     posts = Post.objects.all()
+    #     for post in posts:
+    #         post.delete()
     #
-    #     if request.user != post.user.user:
-    #         return Response(status=status.HTTP_403_FORBIDDEN)
-    #
-    #     post.delete()
     #     return Response(status=status.HTTP_204_NO_CONTENT)

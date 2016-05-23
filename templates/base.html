@@ -17,6 +17,8 @@
   .btn-primary-outline { margin-right: 10px;}
   </style>
 
+
+
 </head>
 
 <body>
@@ -41,14 +43,13 @@
     {% endblock %}
   </div>
 
-
-
   <script>
-  window.onload = function() {
+  $(document).ready(function() {
+    /*  UPLOAD IMAGE FORM MODAL */
     $('#uploadImageForm').submit(function(event) {
-      // alert("HELLO");
       event.preventDefault();
       var formData = new FormData($("#uploadImageForm")[0]);
+
       $.ajax({
         url: 'http://' + window.location.host + '/api/posts/',
         type: "POST",
@@ -68,9 +69,10 @@
         }
       });
     });
-  };
-  </script>
+  });
 
+  // };
+  </script>
   <div class="modal fade" id="uploadImageModal" tabindex="-1" role="dialog" aria-labelledby="uploadImageModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

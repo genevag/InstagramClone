@@ -1,11 +1,159 @@
 {% extends 'base.html' %}
+{% load template_tags %}
 
 {% block content %}
 <h1> Welcome! </h1>
 
+
+
+<script>
+  $(document).ready(function() {
+    // Taken from https://docs.djangoproject.com/en/1.8/ref/csrf/#ajax 2016-03-04
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var USERNAME = "{{ request.user.username }}";
+
+    function updateLikesCount(likeBtn, direction) {
+      var numLikesEl = likeBtn.parent().parent().prev().find("span.numLikes");
+      var newLikesCount = parseInt(numLikesEl.text());
+      if (direction === "like") {
+        newLikesCount = newLikesCount + 1;
+      }
+      else if (direction === "unlike") {
+        newLikesCount = newLikesCount - 1;
+      }
+      numLikesEl.text(newLikesCount);
+    };
+
+    function likePost(username, postID, marker) {
+      $.ajax({
+        url: 'http://' + window.location.host + '/api/posts/' + postID + '/likes/',
+        type: "POST",
+        beforeSend: function(xhr, setings) {
+          var csrftoken = getCookie('csrftoken');
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function(response) {
+          alert(USERNAME + " liked post #" + postID);
+          updateLikesCount(marker, "like");
+        },
+        error: function(xhr, ajaxOptions, error) {
+          alert(xhr.status  + " | " + xhr.responseText + " | " + error);
+        }
+      });
+    };
+
+    function unlikePost(username, postID, marker) {
+      $.ajax({
+        url: 'http://' + window.location.host + '/api/posts/' + postID + '/likes/',
+        type: "DELETE",
+        beforeSend: function(xhr, setings) {
+          var csrftoken = getCookie('csrftoken');
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function(response) {
+          alert(USERNAME + " UNliked post #" + postID);
+          updateLikesCount(marker, "unlike");
+        },
+        error: function(xhr, ajaxOptions, error) {
+          alert(xhr.status  + " | " + xhr.responseText + " | " + error);
+        }
+      });
+    };
+
+    $("a.like-toggle").click(function(event) {
+      event.preventDefault();
+      // alert($(this).hasClass('liked') + " | " + USERNAME);
+
+      // unliking
+      if ($(this).hasClass("liked")) {
+          $(this).removeClass("liked");
+          $(this).children().removeClass("fa-heart").addClass("fa-heart-o");
+      }
+
+      else if (!$(this).hasClass("liked")) {
+        $(this).addClass("liked");
+        $(this).children().removeClass("fa-heart-o").addClass("fa-heart");
+      }
+
+      // $(this).toggleClass("liked");
+      // $(this).children().toggleClass("fa-heart-o").toggleClass("fa-heart");
+      var postID = $(this).closest(".card").attr("id");
+      if ($(this).hasClass("liked")) {
+        likePost(USERNAME, postID, $(this));
+      }
+      else {
+        unlikePost(USERNAME, postID, $(this));
+      }
+    });
+
+    $("form.addCommentForm").submit(function(event) {
+      event.preventDefault();
+
+      var postID = $(this).data('postid');
+      var formData = new FormData($(this)[0]);
+
+      console.log(formData);
+      $.ajax({
+        url: 'http://' + window.location.host + '/api/posts/' + postID + '/comments/',
+        type: "POST",
+        contentType: "application/json",
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function(xhr, setings) {
+          var csrftoken = getCookie('csrftoken');
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        },
+        success: function(response) {
+          alert("YES");
+          console.log(response);
+        },
+        error: function(xhr, ajaxOptions, error) {
+          alert("NO");
+          console.log(error)
+        },
+        complete: function(response) {
+          // window.location.href = '/';
+        }
+      });
+
+      // $.ajax({
+      //   url: 'http://' + window.location.host + "/api/posts/" + postID + '/comments/',
+      //   type: "GET",
+      // //   data: JSON.stringify({"text": $(textInput).val()}),
+      // //   contentType: "application/json",
+      //   success: function(response) {
+      //     alert("Comment Added");
+      //   },
+      //   error: function(xhr, ajaxOptions, error) {
+      //     console.log(xhr " | " + ajaxOptions " | " + error);
+      //   }
+      // });
+    });
+});
+</script>
+
 <div style="margin: auto; max-width: 35em;">
+
+
+
 {% for post in posts reversed %}
-<div class="card" id="{{ post.id }}">
+<div class="card" id="{{ post.id }}" style="font-size: 15px;">
   <div class="card-block">
     <a href="#">{{ post.user.user.username }}</a>
     <small class="text-muted pull-right">{{ post.date_created | timesince }}</small>
@@ -14,15 +162,23 @@
   <img class="card-img-top" data-src="..." alt="Card image cap" src="{{ post.image }}" width=100%>
 
   <div class="card-block">
-    <p class="card-text"> <span class="bold" style="font-weight: 500;">{{ post.likes }} likes</span> </p>
+    <p class="card-text"> <span class="bold" style="font-weight: 500;"><span class="numLikes">{{ post.getLikes }}</span> likes</span> </p>
     <p class="card-text">{{ post.caption }}</p>
+    <div class="comments">
+      {% for comment in post.getComments|slice:"5" %}
+      <a href="/user/{{comment.user.user.username}}">{{comment.user.user.username}}</a> {{ comment.text }}</br>
+      {% endfor %}
+    </div>
   </div>
 
   <div class="card-block">
     <div class="form-group row">
-      <a href="#"><i class="fa fa-heart-o col-sm-1" aria-hidden="true" style="font-size: 1.5em; padding-top: 5px;"></i></a>
+      {% call_post_userLiked post request.user.userprofile as like_status %}
+      <a class="like-toggle {% if like_status %} liked {% endif %}" role="button"><i class="fa {% if like_status %} fa-heart {% else %} fa-heart-o {% endif %} col-sm-1" aria-hidden="true" style="font-size: 1.5em; padding-top: 5px;"></i></a>
       <div class="col-sm-11">
-        <input type="text" class="form-control" placeholder="Add a comment" style="border: transparent;">
+        <form class="addCommentForm" method="POST" data-postid="{{ post.id }}"> {% csrf_token %}
+          <input name="text" type="text" class="form-control" placeholder="Add a comment..." style="border: transparent;">
+        </form>
       </div>
     </div>
   </div>

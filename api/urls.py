@@ -19,7 +19,8 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^posts/$', views.PostList.as_view(), name='posts'),
     url(r'^posts/(?P<pk>[0-9]+)/$',  views.PostDetail.as_view(), name='post_detail'),
-    url(r'^posts/(?P<pk>[0-9]+)/likes$', views.PostLikes.as_view(), name="like"),
+    url(r'^posts/(?P<pk>[0-9]+)/likes/$', views.PostLikes.as_view(), name="like"),
+    url(r'^posts/(?P<post_pk>[0-9]+)/comments/$', views.PostComments.as_view(), name="comment"),
     # url(r'^users/$', views.UserList.as_view(), name='users')
     # url(r'^auth/',include('rest_framework.urls'))
     # url(r'^images/$', views.getImage, name='images')
