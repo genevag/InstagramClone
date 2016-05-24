@@ -46,11 +46,11 @@
           xhr.setRequestHeader("X-CSRFToken", csrftoken);
         },
         success: function(response) {
-          alert(USERNAME + " liked post #" + postID);
+          // alert(USERNAME + " liked post #" + postID);
           updateLikesCount(marker, "like");
         },
         error: function(xhr, ajaxOptions, error) {
-          alert(xhr.status  + " | " + xhr.responseText + " | " + error);
+          console.log(xhr.status  + " | " + xhr.responseText + " | " + error);
         }
       });
     };
@@ -64,11 +64,11 @@
           xhr.setRequestHeader("X-CSRFToken", csrftoken);
         },
         success: function(response) {
-          alert(USERNAME + " UNliked post #" + postID);
+          // alert(USERNAME + " UNliked post #" + postID);
           updateLikesCount(marker, "unlike");
         },
         error: function(xhr, ajaxOptions, error) {
-          alert(xhr.status  + " | " + xhr.responseText + " | " + error);
+          console.log(xhr.status  + " | " + xhr.responseText + " | " + error);
         }
       });
     };
@@ -154,7 +154,7 @@
 {% for post in posts reversed %}
 <article class="card" id="{{ post.id }}" style="font-size: 15px;">
   <div class="card-block">
-    <a href="#">{{ post.user.user.username }}</a>
+    <a href="/user/{{ post.getUsername }}">{{ post.getUsername }}</a>
     <small class="text-muted pull-right">{{ post.date_created | timesince }}</small>
   </div>
 

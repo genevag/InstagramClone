@@ -1,10 +1,85 @@
-<h1> Registration </h1>
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title> Instagram Clone </title>
 
-<form method="POST" action="{% url 'register' %}" enctype="multipart/form-data"> {% csrf_token %}
-{{ form.as_p }}
-  <button type="submit" class="btn btn-primary-outline"> Register </button>
-</form>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
-{{ form.errors }}
-{{ form.non_field_errors }}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+
+  <style type="text/css">
+  form {
+    width: 400px;
+  }
+
+  div.center {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .full-page {
+    width: 100%;
+    height: 100%;
+  }
+
+  .top-padding {
+    padding-top: 1em;
+  }
+
+  .logo-header {
+    font-size: xx-large;
+  }
+
+  .logo-header > a {
+    text-decoration: none;
+  }
+
+  .general-padding {
+    padding: 1em;
+  }
+  </style>
+
+</head>
+
+<body>
+  <header class="logo-header general-padding">
+    <a href="{% url 'home' %}"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i> Clone </a>
+  </header>
+
+  <div class="card card-warning">
+    <div class='card-block'>
+      <center> Not Functioning Yet </center>
+    </div>
+  </div>
+
+  <div class="container-fluid top-padding">
+    <h3><center> Registration </center></h3>
+    <div class="center border full-page">
+      <form action="{% url 'register' %}" enctype="multipart/form-data" class="form-group" method="post" accept-charset="utf-8"> {% csrf_token %}
+          <label> Username </label>
+          <input class="form-control" name="username" type="text" /> <br/>
+
+          <label> Email </label>
+          <input class="form-control" name="email" type="email" /> <br/>
+
+          <label> Password </label>
+          <input class="form-control" name="password1" type="password" /> <br/>
+
+          <label> Password Confirmation </label>
+          <input class="form-control" name="password2" type="password" /> <br/>
+
+          <button class="btn btn-primary-outline" type="submit"> Register </button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
