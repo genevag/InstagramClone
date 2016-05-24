@@ -8,6 +8,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True)
     profile_picture = CloudinaryField('image')
 
+    def getUsername(self):
+        return self.user.username
 
 class Tag(models.Model):
     name  = models.CharField(max_length=50)
@@ -24,6 +26,9 @@ class Comment(models.Model):
     text = models.TextField(max_length=2200)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    def getUsername(self):
+        return self.user.user.username
+
 
 class Post(models.Model):
     image = CloudinaryField('image')
@@ -37,6 +42,9 @@ class Post(models.Model):
     def getLikes(self):
         #return Like.objects.filter(post=self).length
         return self.likes
+
+    def getUsername(self):
+        return self.user.user.username
 
     def like(self, userprofile):
         if (Like.objects.filter(user=userprofile, post=self).exists()):

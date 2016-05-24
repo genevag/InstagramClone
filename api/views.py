@@ -124,10 +124,12 @@ class PostComments(generics.GenericAPIView):
     queryset = Comment.objects.all()
 
     def get(self, request, post_pk, format=None):
-        post = Post.objects.get(pk=post_pk)
+        try:
+            post = Post.objects.get(pk=post_pk)
+        except Post.DoesNotExist:
+            return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
         comments = post.comments.order_by('-date_created')
-        print comments
-        #
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -144,10 +146,3 @@ class PostComments(generics.GenericAPIView):
         serializer = CommentSerializer(comment)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    # def delete(self, request, format=None):
-    #     posts = Post.objects.all()
-    #     for post in posts:
-    #         post.delete()
-    #
-    #     return Response(status=status.HTTP_204_NO_CONTENT)

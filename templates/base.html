@@ -16,6 +16,8 @@
 
   <style type="text/css">
   .btn-primary-outline { margin-right: 10px;}
+  #username_header { margin-right: 10px; }
+  #username_header:hover { cursor: default; }
   </style>
 
 
@@ -29,15 +31,12 @@
     {% include "navbar.html" %}
   {% endif %}
 
-  <div class="container">
-      <h1> {{ request.user.username }} </h1>
-  </div>
-  <button type="button" class="btn btn-primary-outline">Primary</button>
+  <!-- <button type="button" class="btn btn-primary-outline">Primary</button>
   <button type="button" class="btn btn-secondary-outline">Secondary</button>
   <button type="button" class="btn btn-success-outline">Success</button>
   <button type="button" class="btn btn-info-outline">Info</button>
   <button type="button" class="btn btn-warning-outline">Warning</button>
-  <button type="button" class="btn btn-danger-outline">Danger</button>
+  <button type="button" class="btn btn-danger-outline">Danger</button> -->
 
   <div class="container">
     {% block content %}

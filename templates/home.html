@@ -2,8 +2,6 @@
 {% load template_tags %}
 
 {% block content %}
-<h1> Welcome! </h1>
-
 
 
 <script>
@@ -77,7 +75,6 @@
 
     $("a.like-toggle").click(function(event) {
       event.preventDefault();
-      // alert($(this).hasClass('liked') + " | " + USERNAME);
 
       // unliking
       if ($(this).hasClass("liked")) {
@@ -85,13 +82,12 @@
           $(this).children().removeClass("fa-heart").addClass("fa-heart-o");
       }
 
+      // liking
       else if (!$(this).hasClass("liked")) {
         $(this).addClass("liked");
         $(this).children().removeClass("fa-heart-o").addClass("fa-heart");
       }
 
-      // $(this).toggleClass("liked");
-      // $(this).children().toggleClass("fa-heart-o").toggleClass("fa-heart");
       var postID = $(this).closest(".card").attr("id");
       if ($(this).hasClass("liked")) {
         likePost(USERNAME, postID, $(this));
@@ -101,13 +97,25 @@
       }
     });
 
+    function createSingleCommentElement(text, username) {
+      var span = $("<span class='single-comment'></span>");
+      var anchor = $("<a href='/user/'" + username + ">" + username + "</a>");
+
+      span.append(anchor);
+      span.append(text);
+      span.append($('<br/>'));
+
+      return span;
+    };
+
     $("form.addCommentForm").submit(function(event) {
       event.preventDefault();
 
+      var that = this;
       var postID = $(this).data('postid');
       var formData = new FormData($(this)[0]);
+      var commentText = formData.get("text");
 
-      console.log(formData);
       $.ajax({
         url: 'http://' + window.location.host + '/api/posts/' + postID + '/comments/',
         type: "POST",
@@ -120,30 +128,21 @@
           xhr.setRequestHeader("X-CSRFToken", csrftoken);
         },
         success: function(response) {
-          alert("YES");
-          console.log(response);
+          that.reset();
+
+          // insert & display new comment in post without reloading the page
+          var commentEl = createSingleCommentElement(commentText, "{{request.user.username}}");
+          commentEl.prependTo("div#comments-" + postID);
         },
         error: function(xhr, ajaxOptions, error) {
-          alert("NO");
-          console.log(error)
+          alert("Comment could not be posted.");
+          console.log(error);
         },
         complete: function(response) {
           // window.location.href = '/';
         }
       });
 
-      // $.ajax({
-      //   url: 'http://' + window.location.host + "/api/posts/" + postID + '/comments/',
-      //   type: "GET",
-      // //   data: JSON.stringify({"text": $(textInput).val()}),
-      // //   contentType: "application/json",
-      //   success: function(response) {
-      //     alert("Comment Added");
-      //   },
-      //   error: function(xhr, ajaxOptions, error) {
-      //     console.log(xhr " | " + ajaxOptions " | " + error);
-      //   }
-      // });
     });
 });
 </script>
@@ -153,7 +152,7 @@
 
 
 {% for post in posts reversed %}
-<div class="card" id="{{ post.id }}" style="font-size: 15px;">
+<article class="card" id="{{ post.id }}" style="font-size: 15px;">
   <div class="card-block">
     <a href="#">{{ post.user.user.username }}</a>
     <small class="text-muted pull-right">{{ post.date_created | timesince }}</small>
@@ -162,11 +161,13 @@
   <img class="card-img-top" data-src="..." alt="Card image cap" src="{{ post.image }}" width=100%>
 
   <div class="card-block">
-    <p class="card-text"> <span class="bold" style="font-weight: 500;"><span class="numLikes">{{ post.getLikes }}</span> likes</span> </p>
-    <p class="card-text">{{ post.caption }}</p>
-    <div class="comments">
+    <p class="card-text"> <span class="bold" style="font-weight: 500;"><span class="numLikes">{{ post.getLikes }}</span> like{{ post.getLikes | pluralize }}</span> </p>
+    <p class="card-text"><a href="/user/{{post.getUsername}}">{{post.getUsername}}</a> {{ post.caption }}</p>
+    <div id="comments-{{post.id}}" class="comments">
       {% for comment in post.getComments|slice:"5" %}
-      <a href="/user/{{comment.user.user.username}}">{{comment.user.user.username}}</a> {{ comment.text }}</br>
+      <span class="single-comment">
+        <a href="/user/{{comment.getUsername}}">{{comment.getUsername}}</a> {{ comment.text }}</br>
+      </span>
       {% endfor %}
     </div>
   </div>
@@ -184,7 +185,7 @@
       </div>
     </div>
   </div>
-</div>
+</article>
 {% endfor %}
 </div>
 {% endblock %}

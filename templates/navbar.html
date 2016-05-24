@@ -6,12 +6,12 @@
 
     <div class="collapse navbar-toggleable-xs" id="collapsibleNavbar">
       <a class="nav-item nav-link active" href="#"><i class="fa fa-instagram" aria-hidden="true"></i> Clone <span class="sr-only">(current)</span></a>
-      <!-- <a class="nav-item nav-link" href="#">Features</a> -->
     </div>
 
 
   <a href="{% url 'logout' %}"><button class="btn btn-success-outline pull-xs-right" type="submit"><i class="fa fa-sign-out" aria-hidden="true"></i></button></a>
   <button type="button" class="btn btn-primary-outline pull-xs-right" data-toggle="modal" data-target="#uploadImageModal" style="margin-right: 5px;"><i class="fa fa-plus" aria-hidden="true"></i></button>
+  <a id="username_header" class="nav-item nav-link pull-xs-right active"> {{ request.user.username }}  </a>
 
   </div>
 </nav>
