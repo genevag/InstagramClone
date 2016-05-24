@@ -173,7 +173,9 @@
 
   <div class="card-block">
     <div class="form-group row">
-      {% call_post_userLiked post request.user.userprofile as like_status %}
+      {% if not request.user.is_anonymous %}
+        {% call_post_userLiked post request.user.userprofile as like_status %}
+      {% endif %}
       <a class="like-toggle {% if like_status %} liked {% endif %}" role="button"><i class="fa {% if like_status %} fa-heart {% else %} fa-heart-o {% endif %} col-sm-1" aria-hidden="true" style="font-size: 1.5em; padding-top: 5px;"></i></a>
       <div class="col-sm-11">
         <form class="addCommentForm" method="POST" data-postid="{{ post.id }}"> {% csrf_token %}

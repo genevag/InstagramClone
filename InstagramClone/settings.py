@@ -45,8 +45,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
-    'stream',
     'management',
+    'stream',
     'cloudinary',
 )
 
