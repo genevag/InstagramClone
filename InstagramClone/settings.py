@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import dj_database_url
 
+import cloudinary
+cloudinary.config(
+    cloud_name = os.environ.get("cloud_name"),
+    api_key = os.environ.get("api_key"),
+    api_secret = os.environ.get("api_secret")
+)
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,6 +47,7 @@ INSTALLED_APPS = (
     'api',
     'stream',
     'management',
+    'cloudinary',
 )
 
 MIDDLEWARE_CLASSES = (

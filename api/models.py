@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-
+from cloudinary.models import CloudinaryField
 # Create your models here.
 class UserProfile(models.Model):
     url = models.URLField()
     user = models.OneToOneField(User, unique=True)
-    profile_picture = models.ImageField(upload_to=settings.MEDIA_ROOT)
+    profile_picture = CloudinaryField('image')
+
 
 class Tag(models.Model):
     name  = models.CharField(max_length=50)
@@ -25,7 +26,7 @@ class Comment(models.Model):
 
 
 class Post(models.Model):
-    image = models.ImageField(upload_to=settings.MEDIA_ROOT)
+    image = CloudinaryField('image')
     caption = models.TextField(max_length=2200)
     likes = models.PositiveIntegerField(default=0)
     # tags = models.ManyToManyField(Tag, related_name="posts")
@@ -41,23 +42,18 @@ class Post(models.Model):
         if (Like.objects.filter(user=userprofile, post=self).exists()):
             raise Exception("Already Liked")
 
-        # print vars(self)
         likeRelationship = Like(user=userprofile, post=self)
         likeRelationship.save()
-        # print vars(likeRelationship)
         likeRelationship.save()
         self.likes = self.likes + 1
-        print "LIKED"
 
     def unlike(self, userprofile):
         if (not Like.objects.filter(user=userprofile, post=self).exists()):
             raise Exception("Haven't Liked Yet")
 
-        # print vars(self)
         likeRelationship = Like.objects.get(user=userprofile, post=self)
         likeRelationship.delete()
         self.likes = self.likes - 1
-        print "UNLIKED"
 
     def getComments(self):
         comments = Comment.objects.filter(post=self)
@@ -67,8 +63,5 @@ class Post(models.Model):
         try:
             likeRel = Like.objects.get(user=userprofile, post=self)
         except Like.DoesNotExist:
-            print "NOT LIKED YET"
             return False
-
-        print "LIKED ALREADY"
         return True

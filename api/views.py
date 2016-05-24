@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import *
 from api.serializers import *
+import cloudinary
 
 # Create your views here.
 def index(request):
@@ -23,7 +24,11 @@ class PostList(generics.GenericAPIView):
     def post(self, request, format=None):
         userprofile = UserProfile.objects.get(user=request.user)
 
-        post = Post.objects.create(image=request.POST.get('image'), caption=request.POST.get('caption'), user=userprofile)
+        result = cloudinary.uploader.upload(request.POST.get('image'))
+        image_url = result["url"]
+
+        # post = Post.objects.create(image=request.POST.get('image'), caption=request.POST.get('caption'), user=userprofile)
+        post = Post.objects.create(image=image_url, caption=request.POST.get('caption'), user=userprofile)
         post.save()
         serializer = PostSerializer(post)
 
