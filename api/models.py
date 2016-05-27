@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from cloudinary.models import CloudinaryField
+import re
+
 # Create your models here.
 class UserProfile(models.Model):
     url = models.URLField()
@@ -67,9 +69,22 @@ class Post(models.Model):
         comments = Comment.objects.filter(post=self)
         return comments
 
+    def getTags(self):
+        tags = Tag.objects.filter(posts__id = self.id)
+        return tags
+
     def userLiked(self, userprofile):
         try:
             likeRel = Like.objects.get(user=userprofile, post=self)
         except Like.DoesNotExist:
             return False
         return True
+
+    def parseTags(self):
+        results = re.findall("#(?P<ht>([a-zA-Z0-9_])+)", self.caption)
+
+        for item in results:
+            tagName = item[0]
+            tag, created = Tag.objects.get_or_create(name=tagName)
+            tag.posts.add(self)
+            tag.save()

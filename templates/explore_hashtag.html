@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+
+{% block content %}
+
+
+<div style="margin: auto; max-width: 35em;">
+
+  <div class="card card-warning">
+    <div class='card-block'>
+      <center>
+        <h3> This page is currently under construction </h3>
+      </center>
+    </div>
+  </div>
+
+
+{% for post in posts %}
+<article class="card" id="{{ post.id }}" style="font-size: 15px;">
+  <img class="card-img-top" data-src="..." alt="Card image cap" src="{{ post.image }}" width=100%>
+</article>
+{% endfor %}
+
+</div>
+{% endblock %}

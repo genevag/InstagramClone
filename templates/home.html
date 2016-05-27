@@ -151,7 +151,7 @@
 
 
 
-{% for post in posts reversed %}
+{% for post in posts %}
 <article class="card" id="{{ post.id }}" style="font-size: 15px;">
   <div class="card-block">
     <a href="/user/{{ post.getUsername }}">{{ post.getUsername }}</a>
@@ -162,7 +162,7 @@
 
   <div class="card-block">
     <p class="card-text"> <span class="bold" style="font-weight: 500;"><span class="numLikes">{{ post.getLikes }}</span> like{{ post.getLikes | pluralize }}</span> </p>
-    <p class="card-text"><a href="/user/{{post.getUsername}}">{{post.getUsername}}</a> {{ post.caption }}</p>
+    <p class="card-text"><a href="/user/{{post.getUsername}}">{{post.getUsername}}</a> {% parseHashtagMentions post.caption request.get_host %}</p>
     <div id="comments-{{post.id}}" class="comments">
       {% for comment in post.getComments|slice:"5" %}
       <span class="single-comment">

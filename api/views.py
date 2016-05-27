@@ -29,6 +29,7 @@ class PostList(generics.GenericAPIView):
 
         # post = Post.objects.create(image=request.POST.get('image'), caption=request.POST.get('caption'), user=userprofile)
         post = Post.objects.create(image=image_url, caption=request.POST.get('caption'), user=userprofile)
+        post.parseTags()
         post.save()
         serializer = PostSerializer(post)
 

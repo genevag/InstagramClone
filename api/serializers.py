@@ -13,13 +13,19 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         exclude = ('post', )
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        exclude = ('posts',)
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserProfileSerializer(read_only=True)
     image = serializers.ImageField(max_length=None,use_url=True)
 
     comments = CommentSerializer(source='getComments', read_only=True, many=True)
+    tags = TagSerializer(source='getTags', read_only=True, many=True)
+
     class Meta:
         model = Post
-        field = ('image', 'caption', 'comments')
+        field = ('image', 'caption', 'comments', 'tags')
         # exclude = ('likes', )

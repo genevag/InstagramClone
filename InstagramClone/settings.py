@@ -101,6 +101,7 @@ DATABASES = {
 
 
 AUTH_PROFILE_MODULE = "api.UserProfile"
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

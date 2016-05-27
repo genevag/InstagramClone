@@ -54,15 +54,26 @@
     <a href="{% url 'home' %}"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i> Clone </a>
   </header>
 
-  <div class="card card-warning">
-    <div class='card-block'>
-      <center> Not Functioning Yet </center>
-    </div>
-  </div>
+
 
   <div class="container-fluid top-padding">
     <h3><center> Registration </center></h3>
+
+
+    {% if messages %}
+    <div class="card card-warning">
+      <div class='card-block'>
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
     <div class="center border full-page">
+
       <form action="{% url 'register' %}" enctype="multipart/form-data" class="form-group" method="post" accept-charset="utf-8"> {% csrf_token %}
           <label> Username </label>
           <input class="form-control" name="username" type="text" /> <br/>
@@ -75,6 +86,9 @@
 
           <label> Password Confirmation </label>
           <input class="form-control" name="password2" type="password" /> <br/>
+
+          <label> Upload Profile Image </label>
+          <input type="file" name="profile_picture" accept="image/*" class="form-control-file"/> <br/>
 
           <button class="btn btn-primary-outline" type="submit"> Register </button>
       </form>
